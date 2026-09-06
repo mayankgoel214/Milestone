@@ -26,9 +26,16 @@ Important guidelines:
 
 Remember: You are a supportive companion, not a replacement for professional therapy or medical advice.`;
 
+export function isAIConfigured(): boolean {
+  return OPENAI_API_KEY.length > 0;
+}
+
 export async function sendMessageToAI(
   messages: ChatMessage[]
 ): Promise<string> {
+  if (!isAIConfigured()) {
+    throw new Error('AI not configured');
+  }
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',

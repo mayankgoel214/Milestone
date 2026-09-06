@@ -20,8 +20,9 @@ import { Typography } from '../../constants/typography';
 import { Spacing, IconSize, BorderRadius } from '../../constants/spacing';
 import { useAuthStore } from '../../stores/authStore';
 
-// Development mode flag
-const DEV_MODE = __DEV__;
+// Phone auth is not wired up in this prototype — the demo account is the
+// supported way in, so it stays visible in release builds too.
+const DEMO_MODE = true;
 
 export default function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -29,11 +30,11 @@ export default function LoginScreen() {
   const [error, setError] = useState<string | undefined>();
   const { login } = useAuthStore();
 
-  // Development mode: Skip authentication
+  // Sign in with the demo parent account (no real authentication behind this)
   const handleDevSkip = () => {
     Alert.alert(
-      'Development Mode',
-      'This will bypass authentication and log you in with a test account. Continue?',
+      'Demo Account',
+      'This signs you in as a demo parent account. No real authentication happens in this prototype. Continue?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -68,12 +69,11 @@ export default function LoginScreen() {
     setError(undefined);
     setIsLoading(true);
 
-    // In development mode, show info about phone auth setup
-    if (DEV_MODE) {
+    if (DEMO_MODE) {
       setIsLoading(false);
       Alert.alert(
-        'Phone Auth Setup Required',
-        'Phone authentication requires Firebase configuration with phone auth enabled. Use the "Skip Auth (Dev Mode)" button below to test the app.',
+        'Phone Sign-In Not Available',
+        'Phone authentication is not set up in this prototype build. Use "Explore the demo" above to try the app.',
         [{ text: 'OK' }]
       );
       return;
@@ -130,8 +130,8 @@ export default function LoginScreen() {
             </Text>
           </MotiView>
 
-          {/* Development Mode Skip Button - Prominent Position */}
-          {DEV_MODE && (
+          {/* Demo account entry — the supported way in for this prototype */}
+          {DEMO_MODE && (
             <MotiView
               from={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -147,9 +147,9 @@ export default function LoginScreen() {
                   <Zap size={IconSize.lg} color={Colors.primary[600]} />
                 </View>
                 <View style={styles.devTextContainer}>
-                  <Text style={styles.devTitle}>Quick Start (Dev Mode)</Text>
+                  <Text style={styles.devTitle}>Explore the demo</Text>
                   <Text style={styles.devDescription}>
-                    Tap to skip login and explore the app
+                    Try the app as a demo parent account
                   </Text>
                 </View>
               </TouchableOpacity>

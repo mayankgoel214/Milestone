@@ -24,7 +24,7 @@ import {
 import { Colors } from '../../constants/colors';
 import { Typography } from '../../constants/typography';
 import { Spacing, IconSize, BorderRadius } from '../../constants/spacing';
-import { sendMessageToAI, ChatMessage, getQuickSuggestions } from '../../services/openai';
+import { sendMessageToAI, isAIConfigured, ChatMessage, getQuickSuggestions } from '../../services/openai';
 
 interface DisplayMessage {
   id: string;
@@ -97,7 +97,9 @@ export default function ChatScreen() {
       const errorMessage: DisplayMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: "I'm sorry, I'm having trouble connecting right now. Please check your internet connection and try again.",
+        content: isAIConfigured()
+          ? "I'm sorry, I'm having trouble connecting right now. Please check your internet connection and try again."
+          : 'The AI assistant is not live in this demo build — no API key is configured. Everything else in the app works offline.',
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
